@@ -24,6 +24,7 @@ gem 'paperclip'
 gem 'remotipart'
 gem 'jquery-rails'
 gem 'enumerize'
+gem 'easy_translate'
 
 # Gems used only for assets and not required
 # in production environments by default.

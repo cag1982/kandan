@@ -15,7 +15,7 @@
     <% end %>
   <%- end %>
 </head>
-<body id="kandan" data-kandan-config="<%= Kandan::Config.to_json %>">
+<body id="kandan" data-kandan-config="<%= Kandan::Config.to_json %>" data-user-lang="<%= current_user.lang if user_signed_in? %>">
   <% if content_for? :sidebar %>
     <aside class="sidebar">
       <%= yield :sidebar %>
