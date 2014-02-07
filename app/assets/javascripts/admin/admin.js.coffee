@@ -16,6 +16,16 @@ $(document).ready ->
 	$(document).on("click", ".approved-users .admin-action.grant", { action: GRANT_ACTION }, toggleAdminOnUser)
 	$(document).on("click", ".approved-users .admin-action.revoke", { action: REVOKE_ACTION }, toggleAdminOnUser)
 
+	$('.channels-list').on 'change', 'input:checkbox', ->
+	  if $(@).is(':checked')
+	    url = $(@).data('add')
+	  else
+	    url = $(@).data('remove')
+
+	  $.ajax
+	    url: url
+	    type: 'get'
+	 
 	return
 
 act_on_user = (obj) ->

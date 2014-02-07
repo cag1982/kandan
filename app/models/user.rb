@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
   # Being pesimistic here and making the default waiting for approval for security reasons
   enumerize :registration_status, in: [:active, :suspended, :waiting_approval], :default => :waiting_approval
 
+  serialize :allowed_channels, Array
+
   has_many :activities
   before_save :ensure_authentication_token
   before_save :ensure_gravatar_hash

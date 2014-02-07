@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= content_for?(:title) ? yield(:title) : "Kandan" %></title>
+  <title><%= content_for?(:title) ? yield(:title) : "NeuroChat" %></title>
   <%= favicon_link_tag %>
   <%= csrf_meta_tags %>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -15,7 +15,7 @@
     <% end %>
   <%- end %>
 </head>
-<body id="kandan" data-kandan-config="<%= Kandan::Config.to_json %>" data-user-lang="<%= current_user.lang if user_signed_in? %>">
+<body id="kandan" data-kandan-config="<%= Kandan::Config.to_json %>" data-user-lang="<%= current_user.lang if user_signed_in? %>" data-admin="<%= current_user.is_admin? ? 'true' : 'false' %>">
   <% if content_for? :sidebar %>
     <aside class="sidebar">
       <%= yield :sidebar %>

@@ -1,54 +1,62 @@
 module Admin
   class AdminController < BaseController
 
-  	def index
-  		@settings = Setting.my_settings
-  		@all_users = User.find(:all, :conditions => ["id != ?", current_user.id])
+    def index
+      @settings = Setting.my_settings
+      @all_users = User.find(:all, :conditions => ["id != ?", current_user.id])
 
-  		@waiting_for_approval_users = []
-  		@approved_users = []
+      @waiting_for_approval_users = []
+      @approved_users = []
 
-  		# Iterate over the array to get approved and non-approved users
-  		@all_users.each{|user| user.registration_status.waiting_approval? ? @waiting_for_approval_users.push(user) : @approved_users.push(user) }
-  	end
+      # Iterate over the array to get approved and non-approved users
+      @all_users.each do |user|
+        if user.registration_status.waiting_approval?
+          @waiting_for_approval_users.push(user)
+        else
+          @approved_users.push(user)
+        end
+      end
 
-  	def update
+      @channels = Channel.order(:name)
+    end
 
-  		max_rooms = params[:setting][:max_rooms].to_i
-  		public_site = params[:setting][:public_site] == "1"
+    def update
 
-  		Setting.set_values(:max_rooms => max_rooms, :public_site => public_site)
+      max_rooms = params[:setting][:max_rooms].to_i
+      public_site = params[:setting][:public_site] == "1"
 
-  		redirect_to :admin_root
-  	end
+      Setting.set_values(:max_rooms => max_rooms, :public_site => public_site)
 
-  	def update_user
-  		user_id = params[:user_id]
-  		action = params[:action_taken].to_s
+      redirect_to :admin_root
+    end
 
-  		user = User.find(user_id)
+    def update_user
+      user_id = params[:user_id]
+      action = params[:action_taken].to_s
 
-  		case action
-  		when "activate", "approve"
-  			user.activate!
-  		when "suspend"
-  			user.suspend!
-  		end
+      user = User.find(user_id)
 
-  		render :json => user, :status => 200
-  	end
+      case action
+      when "activate", "approve"
+        user.activate!
+      when "suspend"
+        user.suspend!
+      end
 
-  	def toggle_admin
-  		user_id = params[:user_id]
+      render :json => user, :status => 200
+    end
 
-  		user = User.find(user_id)
+    def toggle_admin
+      user_id = params[:user_id]
 
-  		user.is_admin = !user.is_admin?
+      user = User.find(user_id)
 
-  		user.save!
+      user.is_admin = !user.is_admin?
 
-  		render :json => user, :status => 200  		
-  	end
+      user.save!
+
+      render :json => user, :status => 200
+    end
     
   end
 end

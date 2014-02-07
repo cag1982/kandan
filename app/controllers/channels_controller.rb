@@ -8,6 +8,8 @@ class ChannelsController < ApplicationController
     # NOTE Eager loading doesn't respect limit
     nested_channel_data = []
 
+    @channels = Channel.where(id: current_user.allowed_channels)
+
     # TODO this can be shortened
     @channels.each do |channel|
       activities = []
@@ -27,8 +29,10 @@ class ChannelsController < ApplicationController
   end
 
   def create
-    respond_to do |format|
+    if current_user.is_admin == true
       if @channel.save
+        current_user.allowed_channels << @channel.id.to_s
+        current_user.save
         format.json { render :json => @channel, :status => :created }
       else
         format.json { render :json => @channel.errors, :status => :unprocessable_entity }
@@ -37,14 +41,16 @@ class ChannelsController < ApplicationController
   end
 
   def show
-    respond_to do |format|
-      format.json { render :json => @channel }
+    if current_user.allowed_channels.include?(@channel.id.to_s)
+      respond_to do |format|
+        format.json { render :json => @channel }
+      end
     end
   end
 
   def update
     respond_to do |format|
-      if @channel.update_attributes(params[:channel])
+      if current_user.allowed_channels.include?(@channel.id.to_s) and @channel.update_attributes(params[:channel])
         format.json { render :json => @channel, :status => :ok }
       else
         format.json { render :json => @channel.errors, :status => :unprocessable_entity }
@@ -53,18 +59,24 @@ class ChannelsController < ApplicationController
   end
 
   def destroy
-    @channel.destroy
+    if current_user.allowed_channels.include?(@channel.id.to_s)
+      @channel.destroy
+    end
+
     respond_to do |format|
-      format.json { render :json => nil, :status => :ok}
+      format.json { render :json => nil, :status => :ok }
     end
   end
 
   private
+
   def find_channel_by_name
     @channel = Channel.where("LOWER(name) = ?", params['id'].downcase).first
   end
 
   def set_channel_owner
-    @channel.user = current_user
+    #if current_user.allowed_channels.split(',').include?(@channel.id)
+      @channel.user = current_user
+    #end
   end
 end
