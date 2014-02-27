@@ -29,13 +29,24 @@ class ChannelsController < ApplicationController
   end
 
   def create
-    if current_user.is_admin == true
+    if current_user.is_admin? || @channel.private_channel?
       if @channel.save
         current_user.allowed_channels << @channel.id.to_s
         current_user.save
-        format.json { render :json => @channel, :status => :created }
+
+        if @channel.private_channel?
+          guess = User.find params[:guess_id]
+          guess.allowed_channels << @channel.id
+          guess.save
+        end
+
+        respond_to do |format|
+          format.json { render :json => @channel, :status => :created }
+        end
       else
-        format.json { render :json => @channel.errors, :status => :unprocessable_entity }
+        respond_to do |format|
+          format.json { render :json => @channel.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end

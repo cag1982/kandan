@@ -21,13 +21,14 @@ class Kandan.Plugins.UserList
       displayName ||= user.email # Revert to user email address if that's all we have
       isAdmin       = user.is_admin
 
-      $users.append @template({
+      user_item = new Kandan.Views.User
+        user_id: user.id,
         name: displayName,
         admin: isAdmin,
         avatarUrl: Kandan.Helpers.Avatars.urlFor(user, {size: 25})
-      })
-    $el.html($users)
 
+      $users.append user_item.render().el
+    $el.html($users)
 
   @init: ()->
     Kandan.Widgets.register @pluginNamespace

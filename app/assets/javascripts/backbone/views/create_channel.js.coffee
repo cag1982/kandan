@@ -31,7 +31,10 @@ class Kandan.Views.CreateChannel extends Backbone.View
     channelName = prompt("What's the channel name?", name)
     channelName = channelName?.replace(/^\s+|\s+$/g, '')
     if channelName
-      channel = new Kandan.Models.Channel({name: channelName})
+      channel = new Kandan.Models.Channel
+        name: channelName,
+        private_channel: false
+
       channel.save {},
         error: (model, response)->
           _.each(JSON.parse(response.responseText), alert)

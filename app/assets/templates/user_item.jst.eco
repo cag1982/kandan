@@ -1,0 +1,2 @@
+<img class="avatar" src="<%= @avatarUrl %>"/>
+<%= @name %><%- "<span class='badge badge-important'>Admin</span>" if @admin %>

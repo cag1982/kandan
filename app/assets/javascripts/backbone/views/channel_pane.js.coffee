@@ -43,8 +43,7 @@ class Kandan.Views.ChannelPane extends Backbone.View
 
     $('#create_channel').parents('li').before(@nav.render().el)
 
-    if $('body').data('admin') is 'false'
-      $('#create_channel').parent().remove()
+    $('#create_channel').parent().remove() if $('body').data('admin') is false
 
   loadMoreActivities: ($container) ->
     $channel_activities = $container.find(".channel-activities")

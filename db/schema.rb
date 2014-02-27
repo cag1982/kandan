@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140207144620) do
+ActiveRecord::Schema.define(:version => 20140227182537) do
 
   create_table "activities", :force => true do |t|
     t.text     "content"
@@ -38,9 +38,10 @@ ActiveRecord::Schema.define(:version => 20140207144620) do
 
   create_table "channels", :force => true do |t|
     t.text     "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.integer  "user_id"
+    t.boolean  "private_channel", :default => false
   end
 
   add_index "channels", ["user_id"], :name => "index_channels_on_user_id"
