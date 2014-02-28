@@ -36,7 +36,7 @@ class ChannelsController < ApplicationController
 
         if @channel.private_channel?
           guess = User.find params[:guess_id]
-          guess.allowed_channels << @channel.id
+          guess.allowed_channels << @channel.id.to_s
           guess.save
         end
 

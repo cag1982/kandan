@@ -19,8 +19,9 @@ class Kandan.Views.User extends Backbone.View
   createPersonalChannel: (event) ->
     current_user = Kandan.Helpers.Users.currentUser()
     if @$el.user_id isnt current_user.id
+      channelName = [@$el.user_name, current_user.username].sort()
       channel = new Kandan.Models.Channel
-        name: "#{@$el.user_name}-#{current_user.username}",
+        name: channelName.join('-'),
         private_channel: true,
         guess_id: @$el.user_id
 
